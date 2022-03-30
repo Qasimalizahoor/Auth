@@ -22,7 +22,7 @@ Route::prefix('admin')->namespace('Auth\Admin')->group(function(){
         
         Route::get('login', [LoginController::class,'showLoginForm'])->name('admin.login');
         Route::post('login', [LoginController::class,'login']);
-        Route::post('logout', [LoginController::class,'logout'])->name('logout');
+        Route::post('logout', [LoginController::class,'logout'])->name('admin.logout');
 });
 Route::prefix('user')->namespace('User')->group(function(){
 
@@ -38,4 +38,4 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

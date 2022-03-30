@@ -26,17 +26,24 @@ class LoginController extends Controller
     |
     */
 
+    protected $redirectTo = '/admin/dashboard';
     
-    use RedirectsUsers, ThrottlesLogins;
 
     /**
      * Show the application's login form.
      *
      * @return \Illuminate\View\View
      */
+    public function __construct()
+    {
+        $this->middleware('guest')->except('logout');
+    }
+
+    use RedirectsUsers, ThrottlesLogins;
+
     public function showLoginForm()
     {
-        return view('auth.login');
+        return view('auth.admin.login');
     }
 
     /**
@@ -50,7 +57,7 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $this->validateLogin($request);
-
+        
         // If the class is using the ThrottlesLogins trait, we can automatically throttle
         // the login attempts for this application. We'll key this by the username and
         // the IP address of the client making these requests into this application.
@@ -62,6 +69,7 @@ class LoginController extends Controller
         }
 
         if ($this->attemptLogin($request)) {
+            // dd('Login user');
             if ($request->hasSession()) {
                 $request->session()->put('auth.password_confirmed_at', time());
             }
@@ -185,7 +193,7 @@ class LoginController extends Controller
     {
         $this->guard()->logout();
 
-        $request->session()->invalidate();
+        // $request->session()->invalidate();
 
         $request->session()->regenerateToken();
 
@@ -193,9 +201,7 @@ class LoginController extends Controller
             return $response;
         }
 
-        return $request->wantsJson()
-            ? new JsonResponse([], 204)
-            : redirect('/');
+        return redirect()->route('admin.login');
     }
 
     /**
@@ -219,20 +225,6 @@ class LoginController extends Controller
         return Auth::guard('admin');
     }
 
-    /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/admin/dashboard';
-
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('guest')->except('logout');
-    }
+    
+    
 }

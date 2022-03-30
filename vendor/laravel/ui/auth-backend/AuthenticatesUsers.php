@@ -18,7 +18,7 @@ trait AuthenticatesUsers
      */
     public function showLoginForm()
     {
-        return view('auth.login');
+        return view('auth.user.login');
     }
 
     /**
@@ -167,7 +167,7 @@ trait AuthenticatesUsers
     {
         $this->guard()->logout();
 
-        $request->session()->invalidate();
+        // $request->session()->invalidate();
 
         $request->session()->regenerateToken();
 
@@ -175,9 +175,7 @@ trait AuthenticatesUsers
             return $response;
         }
 
-        return $request->wantsJson()
-            ? new JsonResponse([], 204)
-            : redirect('/');
+        return redirect()->route('login');
     }
 
     /**
